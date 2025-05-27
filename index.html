@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>index Form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .register-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .register-container h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .register-container p {
+        color: #666;
+        margin-bottom: 1.5rem;
+      }
+
+      .register-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .input-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 0.5rem;
+      }
+
+      .input-group input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 0.5rem;
+      }
+
+      .icon {
+        margin-right: 0.5rem;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.9rem;
+        text-align: left;
+        display: block;
+        margin-top: 0.25rem;
+      }
+
+      .register-btn {
+        background: #ddd;
+        color: #333;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .register-btn:hover {
+        background: #ccc;
+      }
+
+      .divider {
+        margin: 1.5rem 0;
+      }
+
+      .divider span {
+        display: inline-block;
+        padding: 0.5rem;
+        background: #fff;
+        color: #888;
+      }
+
+      .social-login h1 {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      .auth-btn {
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #eee;
+        border-radius: 5px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>Register</h2>
+      <p>Enter your correct details to get started</p>
+      <form class="register-form" id="registerForm">
+        <div class="input-group">
+          <span class="icon">👤</span>
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+        <span id="username-error" class="error-message"></span>
+
+        <div class="input-group">
+          <span class="icon">✉️</span>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter email address"
+            required
+          />
+        </div>
+        <span id="email-error" class="error-message"></span>
+
+        <div class="input-group">
+          <span class="icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+          />
+        </div>
+        <span id="password-error" class="error-message"></span>
+
+        <div class="input-group">
+          <span class="icon">🔒</span>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm password"
+            required
+          />
+        </div>
+        <span id="confirm-password-error" class="error-message"></span>
+
+        <button type="submit" class="register-btn">Register</button>
+      </form>
+
+      <div class="divider"><span>OR</span></div>
+
+      <div class="social-login">
+        <h1>Already have an account?</h1>
+        <a href="login.html" class="auth-btn">Login</a>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+      document
+        .querySelector("#registerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          console.log("Form submitted");
+          clearErrors();
+
+          let hasError = false;
+
+          const username = document.querySelector("#username").value.trim();
+          const email = document.querySelector("#email").value.trim();
+          const password = document.querySelector("#password").value;
+          const confirmPassword =
+            document.querySelector("#confirmPassword").value;
+
+          if (!username) {
+            showError("username", "Username is required");
+            hasError = true;
+          }
+
+          if (!email) {
+            showError("email", "Email is required");
+            hasError = true;
+          }
+
+          if (!password) {
+            showError("password", "Password is required");
+            hasError = true;
+          } else if (password.length < 6) {
+            showError("password", "Password must be at least 6 characters");
+            hasError = true;
+          }
+
+          if (!confirmPassword) {
+            showError("confirmPassword", "Please confirm your password");
+            hasError = true;
+          } else if (password !== confirmPassword) {
+            showError("confirmPassword", "Passwords do not match");
+            hasError = true;
+          }
+
+          if (!hasError) {
+            checkEmailExists(email).then((emailExists) => {
+              if (emailExists) {
+                showError("email", "Email already exists");
+              } else {
+                const userData = {
+                  username: username,
+                  email: email,
+                  password: password,
+                  confirm_password: confirmPassword,
+                };
+
+                fetch("forms/register.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(userData),
+                })
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                  })
+                  .then((data) => {
+                    console.log("Register response:", data);
+                    if (data.success) {
+                      Toastify({
+                        text: "Registration successful!",
+                        backgroundColor:
+                          "linear-gradient(to right, #00b09b, #96c93d)",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                      }).showToast();
+                      setTimeout(() => {
+                        window.location.href = "login.html";
+                      }, 3000);
+                    } else {
+                      Toastify({
+                        text: data.message || "Registration failed!",
+                        backgroundColor:
+                          "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                      }).showToast();
+                    }
+                  })
+                  .catch((error) => {
+                    console.error("Error in register fetch:", error);
+                    Toastify({
+                      text: "An error occurred. Please try again.",
+                      backgroundColor:
+                        "linear-gradient(to right, #ff5f6d, #ffc371)",
+                      duration: 3000,
+                      gravity: "top",
+                      position: "right",
+                    }).showToast();
+                  });
+              }
+            });
+          }
+        });
+
+      function showError(field, message) {
+        document.querySelector(`#${field}-error`).textContent = message;
+      }
+
+      function clearErrors() {
+        const errors = document.querySelectorAll(".error-message");
+        errors.forEach((error) => (error.textContent = ""));
+      }
+
+      function checkEmailExists(email) {
+        return fetch("forms/check-email.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("checkEmailExists response:", data);
+            return data.exists;
+          })
+          .catch((error) => {
+            console.error("Error in checkEmailExists:", error);
+            return false;
+          });
+      }
+    </script>
+  </body>
+</html>

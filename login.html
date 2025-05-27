@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .login-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .login-container h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .login-container p {
+        color: #666;
+        margin-bottom: 1.5rem;
+      }
+
+      .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.5rem;
+      }
+
+      .input-group .icon {
+        margin-right: 0.5rem;
+        color: #888;
+      }
+
+      .input-group input {
+        border: none;
+        outline: none;
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .login-btn {
+        background: #ddd;
+        color: #333;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .login-btn.clicked {
+        background: #90ee90;
+      }
+
+      .login-btn:hover {
+        background: #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+      <h2>Login</h2>
+      <p>Enter your correct details to access imarketAfrica</p>
+      <form class="login-form" id="loginForm">
+        <div class="input-group">
+          <span class="icon">✉️</span>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter email address"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <span class="icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+          />
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+      document
+        .querySelector("#loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.querySelector("#email").value.trim();
+          const password = document.querySelector("#password").value.trim();
+
+          if (!email || !password) {
+            Toastify({
+              text: "Please fill in all fields",
+              backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+            }).showToast();
+            return;
+          }
+
+          fetch("forms/login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          })
+            .then((response) => {
+              console.log("Raw response:", response);
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Parsed data:", data);
+              Toastify({
+                text: data.success
+                  ? "Logged in successfully!"
+                  : data.message || "Invalid email or password",
+                backgroundColor: data.success
+                  ? "linear-gradient(to right, #00b09b, #96c93d)"
+                  : "linear-gradient(to right, #FF5F6D, #FFC371)",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+              }).showToast();
+
+              if (data.success) {
+                setTimeout(() => {
+                  window.location.href = "index_old.html";
+                }, 3000);
+              }
+            })
+            .catch((error) => {
+              console.error("Full error:", error);
+              Toastify({
+                text: "An error occurred. Please try again later.",
+                backgroundColor: "linear-gradient(to right, #FF5F6D, #FFC371)",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+              }).showToast();
+            });
+        });
+    </script>
+  </body>
+</html>
