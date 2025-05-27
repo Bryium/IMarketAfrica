@@ -6,11 +6,7 @@ IMarketAfrica is a comprehensive web platform designed to facilitate user intera
 - [Features](#features)
 - [Technologies](#technologies)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-
+- 
 ## Features
 
 ### Core Functionality
