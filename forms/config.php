@@ -1,8 +1,8 @@
 <?php
 define('DB_HOST', 'localhost');
-define('DB_USER', 'ayysxvrg_dev');
-define('DB_PASS', 'Market@2025');
-define('DB_NAME', 'ayysxvrg_imarketafrica');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'imarketafrica');
 
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
