@@ -380,30 +380,79 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
       </div><!-- End Section Title -->
      
     <title>Transport Account Form</title>
-    <style>
-        /* Add your styles here */
-    </style>
-    <script>
-        // JavaScript to toggle between private and corporate forms
-        function toggleForm() {
-            const accountType = document.getElementById('accountType').value;
-            const privateForm = document.getElementById('privateForm');
-            const corporateForm = document.getElementById('corporateForm');
-
-            if (accountType === "Private") {
-                privateForm.classList.remove('hidden');
-                corporateForm.classList.add('hidden');
-            } else if (accountType === "Corporate") {
-                corporateForm.classList.remove('hidden');
-                privateForm.classList.add('hidden');
-            }
-        }
-    </script>
+    
+  
 </head>
 <body>
 
-    <h1>Transport Account Form</h1>
+    <h1 class="form-heading">Transport Account Form</h1>
+
+    <style>
+
+      .form-heading {
+        display: flex;
+        justify-content: center;
+      }
+
+      .center-form-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 15px;
+        min-height: 50vh;
+
+      }
+
+      form  {
+    max-width: 700px;
+    width: 100%;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  }
+
+  .form-section {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input, select, textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  button {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+  .hidden { display: none;
+      }
+      
+</style>
     
+    
+    <div class="center-form-container">
     <form action="submit_form.php" method="POST">
         <!-- Account Type Selection -->
         <div class="form-section">
@@ -521,7 +570,33 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
             <button type="submit">Submit</button>
         </div>
     </form>
+  </div>
+<!-- ✅ JavaScript for toggling forms -->
+ <script>
+  function toggleForm() {
+    const type = document.getElementById("accountType").value;
+    const privateForm = document.getElementById("privateForm");
+    const corporateForm = document.getElementById("corporateForm");
 
+    if (type === "Private") {
+      privateForm.classList.remove("hidden");
+      corporateForm.classList.add("hidden");
+    
+    } else if (type === "Corporate") {
+      privateForm.classList.add("hidden");
+      corporateForm.classList.remove("hidden");
+
+    } else {
+      // hide both if none is selected
+      privateForm.classList.add("hidden");
+      corporateForm.classList.add("hidden");
+    }
+
+  }
+
+  // ensure correct form is shown if user goes back to the page
+  window.onload = toggleForm;
+ </script>
 </body>
 </html>
 
