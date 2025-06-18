@@ -1,61 +1,89 @@
 <?php
-$servername = "localhost"; // Your database server
-$username = "root"; // Your database username
-$password = ""; // Your database password (use your actual password)
-$dbname = "transport_accounts"; // The database name
+require_once __DIR__ . '/config.php';   // handles session + constants
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+/* ---------- 1. CONNECT VIA PDO ---------- */
+try {
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+} catch (PDOException $e) {
+    exit("DB connection failed: " . $e->getMessage());
 }
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $accountType = $_POST['accountType'];
-    
-    if ($accountType == "Private") {
-        $firstName = $_POST['firstName'];
-        $lastName = $_POST['lastName'];
-        $dob = $_POST['dob'];
-        $idNum = $_POST['idNum'];
-        $country = $_POST['country'];
-        $location = $_POST['location'];
-        $mode = $_POST['mode'];
-        $phone = $_POST['phone'];
-        $carModel = $_POST['carModel'];
-        $regNum = $_POST['regNum'];
-        $carColor = $_POST['carColor'];
-        $services = $_POST['services'];
-        $cost = $_POST['cost'];
+/* ---------- 2. HANDLE POST ONLY ---------- */
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ' . $_SERVER['HTTP_REFERER'] ?? '/');
+    exit();
+}
 
-        $sql = "INSERT INTO private_accounts (first_name, last_name, dob, id_number, country, location, mode_of_transport, phone_number, car_model, reg_number, car_color, services_provided, cost_charges)
-                VALUES ('$firstName', '$lastName', '$dob', '$idNum', '$country', '$location', '$mode', '$phone', '$carModel', '$regNum', '$carColor', '$services', '$cost')";
-    } elseif ($accountType == "Corporate") {
-        $corpName = $_POST['corpName'];
-        $corpRegNum = $_POST['corpRegNum'];
-        $corpCarModel = $_POST['corpCarModel'];
-        $corpCarColor = $_POST['corpCarColor'];
-        $corpPhone = $_POST['corpPhone'];
-        $corpEmail = $_POST['corpEmail'];
-        $corpCountry = $_POST['corpCountry'];
-        $corpLocation = $_POST['corpLocation'];
-        $corpServices = $_POST['corpServices'];
-        $corpCost = $_POST['corpCost'];
+/* ---------- 3. ROUTE BASED ON accountType ---------- */
+$accountType = $_POST['accountType'] ?? '';
 
-        $sql = "INSERT INTO corporate_accounts (corporate_name, car_reg_number, car_model, car_color, corporate_phone, email, country, location, services_provided, cost_charges)
-                VALUES ('$corpName', '$corpRegNum', '$corpCarModel', '$corpCarColor', '$corpPhone', '$corpEmail', '$corpCountry', '$corpLocation', '$corpServices', '$corpCost')";
-    }
+try {
+    if ($accountType === 'Private') {
 
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully.";
+        $sql = "INSERT INTO private_accounts
+                (first_name, last_name, dob, id_number, country, location,
+                 mode_of_transport, phone_number, car_model, reg_number,
+                 car_color, services_provided, cost_charges)
+                VALUES
+                (:first_name, :last_name, :dob, :id_number, :country, :location,
+                 :mode_of_transport, :phone_number, :car_model, :reg_number,
+                 :car_color, :services_provided, :cost_charges)";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':first_name'       => $_POST['firstName'] ?? '',
+            ':last_name'        => $_POST['lastName'] ?? '',
+            ':dob'              => $_POST['dob'] ?? '',
+            ':id_number'        => $_POST['idNum'] ?? '',
+            ':country'          => $_POST['country'] ?? '',
+            ':location'         => $_POST['location'] ?? '',
+            ':mode_of_transport'=> $_POST['mode'] ?? '',
+            ':phone_number'     => $_POST['phone'] ?? '',
+            ':car_model'        => $_POST['carModel'] ?? '',
+            ':reg_number'       => $_POST['regNum'] ?? '',
+            ':car_color'        => $_POST['carColor'] ?? '',
+            ':services_provided'=> $_POST['services'] ?? '',
+            ':cost_charges'     => $_POST['cost'] ?? 0
+        ]);
+
+    } elseif ($accountType === 'Corporate') {
+
+        $sql = "INSERT INTO corporate_accounts
+                (corporate_name, car_reg_number, car_model, car_color,
+                 corporate_phone, email, country, location,
+                 services_provided, cost_charges)
+                VALUES
+                (:corporate_name, :car_reg_number, :car_model, :car_color,
+                 :corporate_phone, :email, :country, :location,
+                 :services_provided, :cost_charges)";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':corporate_name'   => $_POST['corpName'] ?? '',
+            ':car_reg_number'   => $_POST['corpRegNum'] ?? '',
+            ':car_model'        => $_POST['corpCarModel'] ?? '',
+            ':car_color'        => $_POST['corpCarColor'] ?? '',
+            ':corporate_phone'  => $_POST['corpPhone'] ?? '',
+            ':email'            => $_POST['corpEmail'] ?? '',
+            ':country'          => $_POST['corpCountry'] ?? '',
+            ':location'         => $_POST['corpLocation'] ?? '',
+            ':services_provided'=> $_POST['corpServices'] ?? '',
+            ':cost_charges'     => $_POST['corpCost'] ?? 0
+        ]);
+
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        throw new Exception('Invalid account type selected.');
     }
 
-    // Close connection
-    $conn->close();
+    // Success
+    header('Location: view_accounts.php?success=1');
+    exit();
+
+} catch (Exception $e) {
+    echo "Error saving data: " . $e->getMessage();
+    exit();
 }
-?>
