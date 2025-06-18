@@ -11,7 +11,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_secure', 0);              
     ini_set('session.use_strict_mode', 1);           
 
-    session_start(); // Start session after ini_set()
+    session_start(); 
 }
 
 // ------------------------------
