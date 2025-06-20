@@ -115,7 +115,7 @@ $corporate = $pdo->query("SELECT * FROM corporate_accounts ORDER BY created_at D
   </table>
   <?php endif; ?>
   <div style="text-align:center; margin-top: 30px;">
-    <a href="../Transport account.html" style="text-decoration:none;">
+    <a href="../Transport Account.html" style="text-decoration:none;">
       <button
         style="padding:10px 20px; font-size:16px; cursor:pointer; background:#007bff; color:#fff; border:none; border-radius:5px;">
         ← Back to Transport Account Form
