@@ -448,6 +448,43 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 
   .hidden { display: none;
       }
+
+   .file-upload-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 10px;
+  }
+
+  .file-upload-input {
+    opacity: 0;
+    width: 100%;
+    height: 45px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+  }
+
+  .file-upload-label {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .file-upload-filename {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #333;
+  }   
       
 </style>
     
@@ -512,6 +549,15 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                 <input type="text" id="carColor" name="carColor">
             </div>
             <div class="form-section">
+  <label for="privateVehiclePhoto">Car Picture:</label>
+  <div class="file-upload-wrapper">
+    <label class="file-upload-label" for="privateVehiclePhoto">Choose Vehicle Picture</label>
+    <input type="file" class="file-upload-input" id="privateVehiclePhoto" name="privateVehiclePhoto"
+      accept="image/*" onchange="updateFilename(this)">
+    <div class="file-upload-filename" id="privateVehicleFileName">No file chosen</div>
+  </div>
+</div>
+            <div class="form-section">
                 <label for="services">Services Provided:</label>
                 <textarea id="services" name="services"></textarea>
             </div>
@@ -529,9 +575,15 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                 <input type="text" id="corpName" name="corpName">
             </div>
             <div class="form-section">
-              <label for="privateVehiclePhoto">Car Picture:</label>
-              <inpuut type="file" id="privateVehiclePhoto" name="privateVehiclePhoto" accept="image/*">
-            </div>
+  <label for="privateVehiclePhoto">Car Picture:</label>
+  <div class="file-upload-wrapper">
+    <label class="file-upload-label" for="privateVehiclePhoto">Choose Vehicle Picture</label>
+    <input type="file" class="file-upload-input" id="privateVehiclePhoto" name="privateVehiclePhoto"
+      accept="image/*" onchange="updateFilename(this)">
+    <div class="file-upload-filename" id="privateVehicleFileName">No file chosen</div>
+  </div>
+</div>
+            
             <div class="form-section">
                 <label for="corpRegNum">Car Registration Number:</label>
                 <input type="text" id="corpRegNum" name="corpRegNum">
@@ -596,6 +648,12 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
       corporateForm.classList.add("hidden");
     }
 
+  }
+
+   function updateFilename(input) {
+    const fileNameDisplay = document.getElementById("privateVehicleFileName");
+    const fileName = input.files.length > 0 ? input.files[0].name : "No file chosen";
+    fileNameDisplay.textContent = fileName;
   }
 
   // ensure correct form is shown if user goes back to the page
