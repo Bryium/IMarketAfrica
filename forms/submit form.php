@@ -22,23 +22,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 /* ---------- UPLOAD HELPER ---------- */
 function uploadVehiclePhoto(string $input): ?string
 {
-    if (empty($_FILES[$input]['name'])) return null;
+    // 1. Nothing uploaded?
+    if (empty($_FILES[$input]['name'])) {
+        return null;
+    }
 
-    $allowed = ['jpg','jpeg','png','gif','webp'];
-    $ext = strtolower(pathinfo($_FILES[$input]['name'], PATHINFO_EXTENSION));
-    if (!in_array($ext, $allowed)) return null;
+    // 2. Validate extension
+    $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $ext     = strtolower(pathinfo($_FILES[$input]['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed)) {
+        return null;
+    }
 
-    $dir = __DIR__ . './uploads';               // *** inside /forms/uploads
-    if (!is_dir($dir)) mkdir($dir, 0755, true);
+    // 3. Destination folder  (/forms/uploads)
+    $dir = __DIR__ . '/uploads';           // __DIR__ already = .../forms
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
 
+    // 4. Unique file name
     $newName = uniqid('veh_', true) . '.' . $ext;
     $dest    = $dir . '/' . $newName;
 
+    // 5. Move file
     if (move_uploaded_file($_FILES[$input]['tmp_name'], $dest)) {
-        return 'forms/uploads/' . $newName;    // path usable from site root
+        // ✅ Save path WITHOUT leading dot and WITH slash
+        return 'uploads/' . $newName;      // what you store in DB
     }
-    return null;
+
+    return null;                           // upload failed
 }
+
 
 /* ---------- ROUTE BY TYPE ---------- */
 $type = $_POST['accountType'] ?? '';

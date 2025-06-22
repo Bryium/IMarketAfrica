@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config.php';   // config.php is in the same folder
+require_once __DIR__ . '/config.php';  
 
 /* ---------- CONNECT ---------- */
 try {
