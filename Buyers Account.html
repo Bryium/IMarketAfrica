@@ -206,8 +206,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
           <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
             <div class="service-item position-relative">
               <div class="icon"><i class="bi bi-activity icon"></i></div>
-              <h4><a href="Buyers Account.html" class="stretched-link">Buyers Account</a></h4>
-              <p><a href="Buyers Account.html">Create Buyers Account</a></p>
+              <h4><a href="forms/view_buyers.php" class="stretched-link">Buyers Account</a></h4>
+              <p><a href="forms/view_buyers.php">Create Buyers Account</a></p>
             </div>
           </div><!-- End Service Item -->
 
@@ -405,76 +405,44 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 </head>
 <body>
     <h1>Buyer's Account Information</h1>
-    <form action="#" method="POST">
-
-        <!-- Buyer Details Section -->
+    <form action="forms/submit_buyer.php" method="POST">
       <fieldset>
         <legend>Buyer Details</legend>
-        <p>
-              <label for="buyer_name">Full Name:</label>
-              <input type="text" id="buyer_name" name="buyer_name" required>
- </p>
-          <p>
-  <label for="buyer_email">Email:</label>
-            <input type="email" id="buyer_email" name="buyer_email" required>
-</p>
-          <p>
-  <label for="buyer_phone">Phone Number:</label>
-            <input type="tel" id="buyer_phone" name="buyer_phone" required>
-          </p>
-        </fieldset>
-
-        <!-- Google Map Location Section -->
-        <fieldset>
-            <legend>Google Map Location</legend>
-            <p>Select your location:</p>
-            <!-- Embed Google Map -->
-          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>>
-            </iframe>
+        <p><label>Full Name: <input type="text" name="buyer_name" required></label></p>
+        <p><label>Email: <input type="email" name="buyer_email" required></label></p>
+        <p><label>Phone Number: <input type="tel" name="buyer_phone" required></label></p>
       </fieldset>
-
-        <!-- Product Categories Section -->
-        <fieldset>
-            <legend>Product Categories</legend>
-            <label for="product_category">Select a category:</label>
-            <select id="product_category" name="product_category" required>
-                <option value="electronics">Electronics</option>
-                <option value="clothing">Clothing</option>
-                <option value="books">Books</option>
-                <option value="home_appliances">Home Appliances</option>
-                <option value="sports">Sports</option>
-            </select>
-        </fieldset>
-
-        <!-- Product Search Section -->
-        <fieldset>
-            <legend>Product Search</legend>
-            <label for="search_term">Search for a product:</label>
-          <input type="text" id="search_term" name="search_term" placeholder="Enter product name" required oninput="searchProduct()">
-            <div id="search_results"></div> <!-- This will display the search results -->
-        </fieldset>
-
-        <!-- Account Information Section -->
+  
       <fieldset>
-        <legend>Account Information</legend>
-          <p>
-              <label for="deposit_amount">Deposit Amount:</label>
-              <input type="number" id="deposit_amount" name="deposit_amount" placeholder="Enter amount to deposit">
- </p>
-          <p>
-  <label for="withdrawal_amount">Withdrawal Amount:</label>
-            <input type="number" id="withdrawal_amount" name="withdrawal_amount" placeholder="Enter amount to withdraw">
-</p>
-          <p>
-  <label for="transaction_history">Transaction History:</label>
-            <textarea id="transaction_history" name="transaction_history" rows="4" cols="50" readonly>
-                <!-- This area can be populated dynamically with transaction history -->
-            </textarea>
-          </p>
-        </fieldset>
-
-        <button type="submit">Save Information</button>
+        <legend>Google Map Location</legend>
+        <p>Choose location:</p>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" width="100%" height="270" style="border:0;" allowfullscreen loading="lazy"></iframe>
+      </fieldset>
+  
+      <fieldset>
+        <legend>Product Category</legend>
+        <select name="product_category" required>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="books">Books</option>
+          <option value="home_appliances">Home Appliances</option>
+          <option value="sports">Sports</option>
+        </select>
+      </fieldset>
+  
+      <fieldset>
+        <legend>Product Search</legend>
+        <input type="text" name="search_term" required placeholder="Search product">
+      </fieldset>
+  
+      <fieldset>
+        <legend>Account Info</legend>
+        <p><label>Deposit Amount: <input type="number" name="deposit_amount"></label></p>
+        <p><label>Withdrawal Amount: <input type="number" name="withdrawal_amount"></label></p>
+        <p><label>Transaction History: <textarea name="transaction_history" rows="3" readonly></textarea></label></p>
+      </fieldset>
+  
+      <button type="submit">Save Info</button>
     </form>
 
     <script>
